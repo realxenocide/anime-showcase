@@ -1,9 +1,9 @@
 // Configuration - Use environment variables in production!
 const CONFIG = {
-    GITHUB_TOKEN: "YOUR_NEW_TOKEN", // Replace and NEVER commit this
+    GITHUB_TOKEN: "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", // Replace and NEVER commit this
     REPO: "realxenocide/anime-showcase",
     ANIME_JSON: "anime.json",
-    MAX_FILE_SIZE: 2 * 1024 * 1024 // 2MB
+    MAX_FILE_SIZE: 5 * 1024 * 1024 // 2MB
 };
 
 document.getElementById('anime-form').addEventListener('submit', async (e) => {
