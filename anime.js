@@ -1,6 +1,6 @@
 // Configuration - Use environment variables in production!
 const CONFIG = {
-    GITHUB_TOKEN: process.env.GITHUB_TOKEN, // Netlify will inject this
+    GITHUB_TOKEN: window.GITHUB_TOKEN, // Netlify automatically injects this
     REPO: "realxenocide/anime-showcase",
     ANIME_JSON: "anime.json",
     MAX_FILE_SIZE: 20 * 1024 * 1024 // 20MB
