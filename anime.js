@@ -1,6 +1,6 @@
 // Configuration - Use environment variables in production!
 const CONFIG = {
-    GITHUB_TOKEN: "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", // Replace and NEVER commit this
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Replace and NEVER commit this
     REPO: "realxenocide/anime-showcase",
     ANIME_JSON: "anime.json",
     MAX_FILE_SIZE: 5 * 1024 * 1024 // 2MB
