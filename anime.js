@@ -1,6 +1,6 @@
 // GitHub Configuration (replace with your details)
-const GITHUB_TOKEN = "YOUR_GITHUB_TOKEN"; // Securely handle this in production!
-const REPO = "your-username/your-repo";   // e.g., "myusername/anime-showcase"
+const GITHUB_TOKEN = "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"; // Securely handle this in production!
+const REPO = "realxenocide/anime-showcase";   // e.g., "myusername/anime-showcase"
 const ANIME_JSON_PATH = "anime.json";
 const IMAGES_DIR = "images/";
 
