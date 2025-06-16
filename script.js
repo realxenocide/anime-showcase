@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const animeGrid = document.getElementById("anime-grid");
-    const REPO = "your-username/your-repo"; // Same as in anime.js
+    const REPO = "realxenocide/anime-showcase"; // Same as in anime.js
     const ANIME_JSON_URL = `https://raw.githubusercontent.com/${REPO}/main/anime.json`;
 
     async function fetchAnimeList() {
