@@ -1,1 +1,31 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Anime</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Add New Anime</h2>
+        <form id="anime-form">
+            <div class="form-group">
+                <label for="title">Anime Title</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Banner Image (File)</label>
+                <input type="file" id="image" accept="image/*" required>
+            </div>
+            <button type="submit">Add Anime</button>
+        </form>
+        <div class="success-message" id="success-message">
+            Anime added successfully!
+        </div>
+    </div>
+
+    <script src="anime.js"></script>
+</body>
+</html>
