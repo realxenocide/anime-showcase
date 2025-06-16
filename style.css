@@ -1,1 +1,116 @@
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
 
+/* Form Container (for anime.html) */
+.form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 400px;
+    margin: 50px auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: opacity 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.success-message {
+    color: green;
+    text-align: center;
+    margin-top: 15px;
+    display: none;
+}
+
+/* Anime List (for index.html) */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.anime-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.anime-card:hover {
+    transform: translateY(-5px);
+}
+
+.anime-banner {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.anime-info {
+    padding: 15px;
+}
+
+.anime-title {
+    margin: 0;
+    font-size: 18px;
+}
+
+.empty-state {
+    text-align: center;
+    grid-column: 1 / -1;
+    padding: 40px 0;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: #ccc;
+}
