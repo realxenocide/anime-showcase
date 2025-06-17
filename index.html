@@ -1,23 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Anime List</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Anime List</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>My Anime List</h1>
-            <p>All the anime I've watched</p>
-        </header>
+  <div class="container">
+    <header class="header">
+      <h1>My Anime List</h1>
+      <p>All the anime I've watched</p>
+    </header>
 
-        <div class="anime-grid" id="anime-grid">
-            <!-- Cards will be loaded here -->
+    <div class="anime-grid" id="anime-grid">
+      <!-- Sample anime cards -->
+      <div class="anime-card">
+        <div class="anime-banner" style="background: #00a7f8; display: flex; justify-content: center; align-items: center; color: white;">
+          <i class="fas fa-image" style="font-size: 3rem;"></i>
         </div>
+        <div class="anime-info">
+          <h3>Demon Slayer: Kimetsu no Yaiba - Entertainment District Arc</h3>
+        </div>
+      </div>
+      
+      <div class="anime-card">
+        <div class="anime-banner" style="background: #dfedf1; display: flex; justify-content: center; align-items: center; color: var(--dark-text);">
+          <i class="fas fa-image" style="font-size: 3rem;"></i>
+        </div>
+        <div class="anime-info">
+          <h3>Attack on Titan Final Season Part 3</h3>
+        </div>
+      </div>
+      
+      <div class="anime-card">
+        <div class="anime-banner" style="background: #081123; display: flex; justify-content: center; align-items: center; color: white;">
+          <i class="fas fa-image" style="font-size: 3rem;"></i>
+        </div>
+        <div class="anime-info">
+          <h3>Jujutsu Kaisen Season 2: Shibuya Incident Arc</h3>
+        </div>
+      </div>
     </div>
-
-    <script src="script.js"></script>
+  </div>
 </body>
 </html>
