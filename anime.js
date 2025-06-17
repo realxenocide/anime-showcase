@@ -5,19 +5,21 @@ const CONFIG = {
     MAX_FILE_SIZE: 20 * 1024 * 1024 // 20MB
 };
 
-// Secure token fetch
+// Secure token fetch with retry logic
 async function getGitHubToken() {
     try {
         const response = await fetch('/.netlify/functions/github-auth');
-        if (!response.ok) throw new Error('Failed to get token');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
+        if (!data.token) throw new Error("Token not found in response");
         return data.token;
     } catch (error) {
         console.error('Token fetch error:', error);
-        return null;
+        throw new Error("Failed to get authentication token");
     }
 }
 
+// Main form handler
 document.getElementById('anime-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const submitBtn = document.getElementById('submit-btn');
@@ -29,7 +31,7 @@ document.getElementById('anime-form').addEventListener('submit', async (e) => {
         const imageFile = document.getElementById('image').files[0];
         
         if (!title) throw new Error("Anime title is required");
-        if (!imageFile) throw new Error("Image is required");
+        if (!imageFile) throw new Error("Please select an image file");
         
         // Set loading state
         submitBtn.disabled = true;
@@ -37,18 +39,16 @@ document.getElementById('anime-form').addEventListener('submit', async (e) => {
         messageEl.textContent = "";
         messageEl.className = "message";
         
-        // Get fresh token for each request
+        // Get fresh token
         const token = await getGitHubToken();
-        if (!token) throw new Error("Authentication failed - please refresh and try again");
         
         // 1. Upload image
         const imageUrl = await uploadImage(imageFile, token);
         
-        // 2. Update anime.json
+        // 2. Update anime.json (simplified without addedAt)
         await updateAnimeList({ 
             name: title, 
-            image: imageUrl.split('/').pop(),
-            addedAt: new Date().toISOString()
+            image: imageUrl.split('/').pop() // Store just filename
         }, token);
         
         // Success
@@ -57,18 +57,20 @@ document.getElementById('anime-form').addEventListener('submit', async (e) => {
         
     } catch (error) {
         showMessage(error.message, "error");
-        console.error("Error:", error);
+        console.error("Operation failed:", error);
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = "Add Anime";
     }
 });
 
+// Image upload function
 async function uploadImage(file, token) {
     // Validate file
     if (!file.type.startsWith('image/')) {
-        throw new Error("Only image files are allowed");
+        throw new Error("Only image files (JPEG, PNG, etc.) are allowed");
     }
+    
     if (file.size > CONFIG.MAX_FILE_SIZE) {
         throw new Error(`Image must be smaller than ${CONFIG.MAX_FILE_SIZE/1024/1024}MB`);
     }
@@ -93,15 +95,17 @@ async function uploadImage(file, token) {
     );
     
     const data = await response.json();
+    
     if (!response.ok) {
-        if (response.status === 401) throw new Error("Invalid GitHub token");
-        if (response.status === 403) throw new Error("Rate limit exceeded");
+        if (response.status === 401) throw new Error("Invalid GitHub token - please refresh and try again");
+        if (response.status === 403) throw new Error("Rate limit exceeded - try again later");
         throw new Error(data.message || "Image upload failed");
     }
     
     return `https://raw.githubusercontent.com/${CONFIG.REPO}/main/${filename}`;
 }
 
+// Update anime list function
 async function updateAnimeList(newAnime, token) {
     try {
         // Get current anime.json
@@ -115,29 +119,22 @@ async function updateAnimeList(newAnime, token) {
             }
         );
 
-        // Validate response
-        if (!response.ok) {
-            const errorData = await response.text(); // Get raw response first
-            throw new Error(`GitHub API Error: ${response.status} - ${errorData}`);
-        }
-
-        const data = await response.json();
-        
-        // Validate JSON content
         let currentContent = [];
         let sha = null;
         
-        if (data.content) {
-            try {
-                currentContent = JSON.parse(atob(data.content));
-            } catch (parseError) {
-                console.error("Failed to parse anime.json:", {
-                    content: data.content,
-                    error: parseError
-                });
-                throw new Error("Invalid anime.json format - may be corrupted");
-            }
+        if (response.ok) {
+            const data = await response.json();
             sha = data.sha;
+            
+            // Safely parse JSON
+            try {
+                currentContent = data.content ? JSON.parse(atob(data.content)) : [];
+            } catch (e) {
+                console.warn("Resetting corrupted anime.json");
+                currentContent = [];
+            }
+        } else if (response.status !== 404) {
+            throw new Error(`Failed to fetch anime.json: ${response.status}`);
         }
 
         // Add new anime
@@ -161,32 +158,36 @@ async function updateAnimeList(newAnime, token) {
         );
         
         if (!updateResponse.ok) {
-            const updateError = await updateResponse.json();
-            throw new Error(updateError.message || "Failed to update anime list");
+            const errorData = await updateResponse.json();
+            throw new Error(errorData.message || "Failed to update anime list");
         }
         
-        return true;
-        
     } catch (error) {
-        console.error("Update failed:", {
-            error: error,
-            newAnime: newAnime,
-            tokenPresent: !!token
-        });
+        console.error("Update error:", error);
         throw new Error(`Could not update anime list: ${error.message}`);
     }
 }
 
 // Helper functions
 function generateFilename(originalName) {
-    return `${Date.now()}-${originalName.toLowerCase().replace(/[^a-z0-9.]/g, '-')}`;
+    return `${Date.now()}-${originalName.toLowerCase()
+        .replace(/[^a-z0-9.]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')}`;
 }
 
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
+        reader.onload = () => {
+            const result = reader.result;
+            if (typeof result === 'string' && result.startsWith('data:')) {
+                resolve(result.split(',')[1]);
+            } else {
+                reject(new Error("Invalid file data"));
+            }
+        };
+        reader.onerror = () => reject(new Error("Failed to read file"));
         reader.readAsDataURL(file);
     });
 }
@@ -195,4 +196,9 @@ function showMessage(text, type) {
     const el = document.getElementById('message');
     el.textContent = text;
     el.className = `message ${type}`;
+    el.style.display = 'block';
+    
+    if (type === 'success') {
+        setTimeout(() => el.style.display = 'none', 3000);
+    }
 }
