@@ -29,6 +29,10 @@ body {
 .header {
     text-align: center;
     margin-bottom: 2rem;
+    padding: 2rem;
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
@@ -103,15 +107,22 @@ body {
 /* FORM PAGE STYLES */
 .form-container {
     max-width: 500px;
-    margin: 2rem auto;
+    margin: 3rem auto;
     padding: 2rem;
     background: var(--white);
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.form-container h2 {
+    color: var(--primary);
+    margin-top: 0;
 }
 
 .form-group {
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .form-group label {
@@ -121,37 +132,68 @@ body {
     color: var(--dark-text);
 }
 
-.form-group input[type="text"],
-.form-group input[type="file"] {
+/* Stylish file input */
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    box-sizing: border-box;
 }
 
-.form-group input[type="file"] {
-    padding: 0.5rem;
+.file-input-wrapper input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-input-label {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--primary);
+    color: white;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.file-input-label:hover {
+    background: #0087d1;
+}
+
+.file-input-text {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #666;
 }
 
 .button {
     display: block;
     width: 100%;
+    max-width: 200px;
+    margin: 1.5rem auto 0;
     padding: 0.8rem;
     background: var(--primary);
     color: white;
-    text-decoration: none;
     font-weight: 600;
     border-radius: 5px;
     border: none;
     cursor: pointer;
     font-size: 1rem;
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .button:hover {
     background: #0087d1;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .message {
