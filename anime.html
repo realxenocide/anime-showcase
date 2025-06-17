@@ -17,7 +17,13 @@
                 </div>
                 <div class="form-group">
                     <label for="image">Banner Image</label>
-                    <input type="file" id="image" accept="image/*" required>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="image" accept="image/*" required>
+                        <label for="image" class="file-input-label">
+                            Choose File
+                            <span class="file-input-text">No file chosen</span>
+                        </label>
+                    </div>
                 </div>
                 <button type="submit" id="submit-btn" class="button">Add Anime</button>
             </form>
@@ -25,6 +31,13 @@
         </div>
     </div>
 
+    <script>
+        // Show selected file name
+        document.getElementById('image').addEventListener('change', function(e) {
+            const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+            document.querySelector('.file-input-text').textContent = fileName;
+        });
+    </script>
     <script src="anime.js"></script>
 </body>
 </html>
