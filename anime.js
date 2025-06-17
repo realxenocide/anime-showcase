@@ -103,48 +103,77 @@ async function uploadImage(file, token) {
 }
 
 async function updateAnimeList(newAnime, token) {
-    // Get current anime.json
-    const response = await fetch(
-        `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.ANIME_JSON}`,
-        {
-            headers: {
-                "Authorization": `token ${token}`,
-                "Accept": "application/vnd.github.v3+json",
-            },
+    try {
+        // Get current anime.json
+        const response = await fetch(
+            `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.ANIME_JSON}`,
+            {
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Accept": "application/vnd.github.v3+json",
+                },
+            }
+        );
+
+        // Validate response
+        if (!response.ok) {
+            const errorData = await response.text(); // Get raw response first
+            throw new Error(`GitHub API Error: ${response.status} - ${errorData}`);
         }
-    );
-    
-    let currentContent = [];
-    let sha = null;
-    
-    if (response.ok) {
+
         const data = await response.json();
-        currentContent = JSON.parse(atob(data.content));
-        sha = data.sha;
-    }
-    
-    // Add new anime
-    currentContent.push(newAnime);
-    
-    // Push update
-    const updateResponse = await fetch(
-        `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.ANIME_JSON}`,
-        {
-            method: "PUT",
-            headers: {
-                "Authorization": `token ${token}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                message: `Add anime: ${newAnime.name}`,
-                content: btoa(JSON.stringify(currentContent, null, 2)),
-                sha: sha,
-            }),
+        
+        // Validate JSON content
+        let currentContent = [];
+        let sha = null;
+        
+        if (data.content) {
+            try {
+                currentContent = JSON.parse(atob(data.content));
+            } catch (parseError) {
+                console.error("Failed to parse anime.json:", {
+                    content: data.content,
+                    error: parseError
+                });
+                throw new Error("Invalid anime.json format - may be corrupted");
+            }
+            sha = data.sha;
         }
-    );
-    
-    if (!updateResponse.ok) {
-        throw new Error("Failed to update anime list");
+
+        // Add new anime
+        currentContent.push(newAnime);
+        
+        // Push update
+        const updateResponse = await fetch(
+            `https://api.github.com/repos/${CONFIG.REPO}/contents/${CONFIG.ANIME_JSON}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    message: `Add anime: ${newAnime.name}`,
+                    content: btoa(JSON.stringify(currentContent, null, 2)),
+                    sha: sha,
+                }),
+            }
+        );
+        
+        if (!updateResponse.ok) {
+            const updateError = await updateResponse.json();
+            throw new Error(updateError.message || "Failed to update anime list");
+        }
+        
+        return true;
+        
+    } catch (error) {
+        console.error("Update failed:", {
+            error: error,
+            newAnime: newAnime,
+            tokenPresent: !!token
+        });
+        throw new Error(`Could not update anime list: ${error.message}`);
     }
 }
 
