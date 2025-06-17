@@ -1,64 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Anime List</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-  <div class="container">
-    <header class="header">
-      <h1>My Anime List</h1>
-      <p>All the anime I've watched</p>
-    </header>
+/* COLOR PALETTE */
+:root {
+  --primary: #00a7f8;
+  --light-bg: #dfedf1;
+  --white: #ffffff;
+  --dark-text: #081123;
+  --error: #ff4444;
+  --success: #00c851;
+}
 
-    <div class="anime-grid" id="anime-grid">
-      <div class="empty-state">
-        <i class="fas fa-film"></i>
-        <h3>No anime added yet</h3>
-      </div>
-    </div>
-  </div>
+/* BASE STYLES */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--light-bg);
+  color: var(--dark-text);
+  line-height: 1.6;
+}
 
-  <script>
-    // Sample data - replace with your actual data loading
-    const sampleAnime = [
-      { name: "Demon Slayer", image: "https://example.com/demon-slayer.jpg" },
-      { name: "Attack on Titan", image: "https://example.com/aot.jpg" },
-      { name: "Jujutsu Kaisen", image: "https://example.com/jjk.jpg" }
-    ];
+/* CONTAINER */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
 
-    function loadAnime() {
-      const grid = document.getElementById('anime-grid');
-      grid.innerHTML = '';
-      
-      if (sampleAnime.length === 0) {
-        grid.innerHTML = `
-          <div class="empty-state">
-            <i class="fas fa-film"></i>
-            <h3>No anime added yet</h3>
-          </div>
-        `;
-        return;
-      }
-      
-      sampleAnime.forEach(anime => {
-        const card = document.createElement('div');
-        card.className = 'anime-card';
-        card.innerHTML = `
-          <img class="anime-banner" src="${anime.image}" alt="${anime.name}">
-          <div class="anime-info">
-            <h3>${anime.name}</h3>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
-    // Load anime when page loads
-    document.addEventListener('DOMContentLoaded', loadAnime);
-  </script>
-</body>
-</html>
+.header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: var(--primary);
+}
+
+.header p {
+  color: var(--dark-text);
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* ANIME GRID - MOBILE FIRST */
+.anime-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Single column by default */
+  gap: 1.2rem;
+  width: 100%;
+}
+
+/* Tablet view (2 columns) */
+@media (min-width: 600px) {
+  .anime-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop view (3+ columns) */
+@media (min-width: 900px) {
+  .anime-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+/* ANIME CARD */
+.anime-card {
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  width: 100%;
+}
+
+.anime-card:hover {
+  transform: translateY(-3px);
+}
+
+.anime-banner {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 2px solid var(--primary);
+}
+
+.anime-info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.anime-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--dark-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* FORM PAGE STYLES */
+.form-container {
+  max-width: 90%;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 2rem 0;
+  color: #666;
+}
+
+.empty-state i {
+  font-size: 2rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
