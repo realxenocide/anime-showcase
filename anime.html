@@ -7,21 +7,29 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="form-container">
-        <h2>Add New Anime</h2>
-        <form id="anime-form">
-            <div class="form-group">
-                <label for="title">Anime Title</label>
-                <input type="text" id="title" required>
-            </div>
-            <div class="form-group">
-                <label for="image">Banner Image</label>
-                <input type="file" id="image" accept="image/*" required>
-            </div>
-            <button type="submit" id="submit-btn">Add Anime</button>
-        </form>
-        <div class="message" id="message"></div>
+    <div class="container">
+        <header class="header">
+            <h1>Add New Anime</h1>
+            <p>Fill the form to add anime to your collection</p>
+            <a href="index.html" class="admin-link">Back to List</a>
+        </header>
+
+        <div class="form-container">
+            <form id="anime-form">
+                <div class="form-group">
+                    <label for="title">Anime Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="image">Banner Image</label>
+                    <input type="file" id="image" accept="image/*" required>
+                </div>
+                <button type="submit" id="submit-btn" class="admin-link">Add Anime</button>
+            </form>
+            <div class="message" id="message"></div>
+        </div>
     </div>
+
     <script src="anime.js"></script>
 </body>
 </html>
